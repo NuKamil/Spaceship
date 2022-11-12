@@ -7,7 +7,7 @@ class Game {
 
     #ship = new Spaceship(this.#htmlElements.spaceship);
     init() {
-        this.ship.init();
+        this.#ship.init();
     }
 }
 
