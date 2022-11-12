@@ -1,7 +1,11 @@
 import {Spaceship} from "./Spaceship.js";
 
 class Game {
-    ship = new Spaceship();
+    #htmlElements = {
+        spaceship: document.querySelector('[data-spaceship]')
+    };
+
+    #ship = new Spaceship(this.#htmlElements.spaceship);
     init() {
         this.ship.init();
     }
