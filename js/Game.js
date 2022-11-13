@@ -1,19 +1,22 @@
-import {Spaceship} from "./Spaceship.js";
+import { Spaceship } from "./Spaceship.js";
 
 class Game {
-    #htmlElements = {
-        spaceship: document.querySelector('[data-spaceship]'),
-        container: document.querySelector('[data-container]'),
+  #htmlElements = {
+    spaceship: document.querySelector("[data-spaceship]"),
+    container: document.querySelector("[data-container]"),
+  };
 
-    };
-
-    #ship = new Spaceship(this.#htmlElements.spaceship, this.#htmlElements.container);
-    init() {
-        this.#ship.init();
-    }
+  #ship = new Spaceship(
+    this.#htmlElements.spaceship,
+    this.#htmlElements.container
+  );
+  
+  init() {
+    this.#ship.init();
+  }
 }
 
 window.onload = function () {
-    const game = new Game();
-    game.init();
-}
+  const game = new Game();
+  game.init();
+};
