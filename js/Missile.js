@@ -11,9 +11,7 @@ export class Missile {
     this.container.appendChild(this.element);
     this.element.style.left = `${this.x}px`;
     this.element.style.top = `${this.y}px`;
-    setInterval(
-      () => (this.element.style.top = `${this.element.offsetTop - 1} px`),
-      5
-    );
+    setInterval(() =>
+      this.element.style.top = `${this.element.offsetTop - 1}px`, 5)
   }
 }
