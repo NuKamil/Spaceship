@@ -1,22 +1,43 @@
-import { Spaceship } from "./Spaceship.js";
+import {Spaceship} from "./Spaceship.js";
 
 class Game {
-  #htmlElements = {
-    spaceship: document.querySelector("[data-spaceship]"),
-    container: document.querySelector("[data-container]"),
-  };
+    #htmlElements = {
+        spaceship: document.querySelector("[data-spaceship]"),
+        container: document.querySelector("[data-container]"),
+    };
 
-  #ship = new Spaceship(
-    this.#htmlElements.spaceship,
-    this.#htmlElements.container
-  );
-  
-  init() {
-    this.#ship.init();
-  }
+    #ship = new Spaceship(
+        this.#htmlElements.spaceship,
+        this.#htmlElements.container
+    );
+
+    #checkPositionInterval = null;
+
+    init() {
+        this.#ship.init();
+        this.#newGame();
+    }
+
+    #newGame() {
+        this.#checkPositionInterval = (() => {this.#checkPosition(), 1; console.log(this.#checkPositionInterval)});
+    }
+
+    #checkPosition() {
+        this.#ship.missiles.forEach((missile, missileIndex, missileArr) => {
+            const missilePosition = {
+                top: missile.element.offsetTop,
+                right: missile.element.offsetLeft + missile.element.offsetWidth,
+                left: missile.element.offsetLeft,
+                bottom: missile.element.offsetTop + missile.element.offsetHeight
+            };
+            if (missilePosition.bottom < 0) {
+                missile.remove();
+            }
+        })
+    }
 }
 
 window.onload = function () {
-  const game = new Game();
-  game.init();
+    const game = new Game();
+    game.init();
 };
