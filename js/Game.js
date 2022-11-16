@@ -1,43 +1,86 @@
-import {Spaceship} from "./Spaceship.js";
+import { Spaceship } from "./Spaceship.js";
+import { Enemy } from "./Enemy.js";
 
 class Game {
-    #htmlElements = {
-        spaceship: document.querySelector("[data-spaceship]"),
-        container: document.querySelector("[data-container]"),
-    };
+  #htmlElements = {
+    spaceship: document.querySelector("[data-spaceship]"),
+    container: document.querySelector("[data-container]"),
+  };
 
-    #ship = new Spaceship(
-        this.#htmlElements.spaceship,
-        this.#htmlElements.container
-    );
+  #ship = new Spaceship(
+    this.#htmlElements.spaceship,
+    this.#htmlElements.container
+  );
 
-    #checkPositionInterval = null;
+  #enemies = [];
+  #enemiesInterval = null;
+  #checkPositionInterval = null;
+  #createEnemyInterval = null;
 
-    init() {
-        this.#ship.init();
-        this.#newGame();
-    }
+  init() {
+    this.#ship.init();
+    this.#newGame();
+  }
 
-    #newGame() {
-        this.#checkPositionInterval = setInterval(() => {this.#checkPosition(), 1});
-    }
+  #newGame() {
+    this.#enemiesInterval = 30;
+    this.#createEnemyInterval = setInterval(() => this.#randomNewEnemy(), 1000);
+    this.#checkPositionInterval = setInterval(() => this.#checkPosition(), 1);
+  }
 
-    #checkPosition() {
-        this.#ship.missiles.forEach((missile, missileIndex, missileArr) => {
-            const missilePosition = {
-                top: missile.element.offsetTop,
-                right: missile.element.offsetLeft + missile.element.offsetWidth,
-                bottom: missile.element.offsetTop + missile.element.offsetHeight,
-                left: missile.element.offsetLeft,
-            };
-            if (missilePosition.bottom < 0) {
-                missile.remove();
-            }
-        })
-    }
+  #randomNewEnemy() {
+    const randomNumber = Math.floor(Math.random() * 5) + 1;
+    randomNumber % 5
+      ? this.#createNewEnemy(
+          this.#htmlElements.container,
+          this.#enemiesInterval,
+          "enemy"
+        )
+      : this.#createNewEnemy(
+          this.#htmlElements.container,
+          this.#enemiesInterval * 2,
+          "enemy--big",
+          3,
+        );
+  }
+
+  #createNewEnemy(...params) {
+    const enemy = new Enemy(...params);
+    enemy.init();
+    this.#enemies.push(enemy);
+  }
+
+  #checkPosition() {
+    this.#enemies.forEach((enemy, enemyIndex, enemiesArr) => {
+      const enemyPosition = {
+        top: enemy.element.offsetTop,
+        right: enemy.element.offsetLeft + enemy.element.offsetWidth,
+        bottom: enemy.element.offsetTop + enemy.element.offsetHeight,
+        left: enemy.element.offsetLeft,
+      };
+      if (enemyPosition.top > window.innerHeight) {
+        enemy.remove();
+        console.log(enemy);
+        enemiesArr.splice(enemyIndex, 1);
+        console.log(enemiesArr.length);
+      }
+    });
+    this.#ship.missiles.forEach((missile, missileIndex, missileArr) => {
+      const missilePosition = {
+        top: missile.element.offsetTop,
+        right: missile.element.offsetLeft + missile.element.offsetWidth,
+        bottom: missile.element.offsetTop + missile.element.offsetHeight,
+        left: missile.element.offsetLeft,
+      };
+      if (missilePosition.bottom < 0) {
+        missile.remove();
+        missileArr.splice(missileIndex, 1);
+      }
+    });
+  }
 }
 
 window.onload = function () {
-    const game = new Game();
-    game.init();
+  const game = new Game();
+  game.init();
 };
