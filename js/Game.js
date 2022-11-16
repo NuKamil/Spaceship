@@ -19,7 +19,7 @@ class Game {
     }
 
     #newGame() {
-        this.#checkPositionInterval = (() => {this.#checkPosition(), 1; console.log(this.#checkPositionInterval)});
+        this.#checkPositionInterval = setInterval(() => {this.#checkPosition(), 1});
     }
 
     #checkPosition() {
@@ -27,8 +27,8 @@ class Game {
             const missilePosition = {
                 top: missile.element.offsetTop,
                 right: missile.element.offsetLeft + missile.element.offsetWidth,
+                bottom: missile.element.offsetTop + missile.element.offsetHeight,
                 left: missile.element.offsetLeft,
-                bottom: missile.element.offsetTop + missile.element.offsetHeight
             };
             if (missilePosition.bottom < 0) {
                 missile.remove();
